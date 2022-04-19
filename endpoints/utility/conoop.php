@@ -15,7 +15,7 @@ class Database {
         
         $this->pdo = null;
         try{
-            $var=file_get_contents('./credentials.json');
+            $var=file_get_contents('../../credentials.json');
             $config= (array)json_decode($var);
             
             $this->pdo = new PDO("mysql:host=" . $config['host'] . ";dbname=" .$config['dbname'], $config['user'], $config['password']);
