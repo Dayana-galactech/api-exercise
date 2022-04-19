@@ -1,5 +1,9 @@
 <?php
 
+namespace Controllers;
+
+use PDO;
+
 class Employee{
     public $pdo;
     private $db_table = "employee";
@@ -35,4 +39,3 @@ class Employee{
          return false;
     }
 }    
-?>
