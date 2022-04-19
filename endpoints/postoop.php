@@ -4,8 +4,8 @@
     header("Access-Control-Allow-Methods: POST");
     header("Access-Control-Max-Age: 3600");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    include_once 'conoop.php';
-    include_once 'employee.php';
+    include_once './conoop.php';
+    include_once './employee.php';
     $database = new Database();
     $db = $database->getConnection();
     $employee = new Employee($db);
