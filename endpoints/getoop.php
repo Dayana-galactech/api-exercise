@@ -1,18 +1,18 @@
 <?php
 
-use Controllers\Employee;
+use Controllers\EmployeeController;
 use Utility\Database;
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 require_once '../utility/Database.php';
-require_once '../controllers/Employee.php';
+require_once '../controllers/EmployeeController.php';
 
 try{
     $database = new Database();
     $db = $database->getConnection();
-    $employee = new Employee($db);
+    $employee = new EmployeeController($db);
     $stmt = $employee->getEmployees();
     $employeeCount = $stmt->rowCount();
 
