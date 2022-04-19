@@ -1,10 +1,15 @@
 <?php
+
+use Controllers\Employee;
+use Utility\Database;
+
 header("Access-Control-Allow-Origin: *");
-    header("Content-Type: application/json; charset=UTF-8");
-    
-    require_once './conoop.php';
-    require_once './employee.php';
-    try{
+header("Content-Type: application/json; charset=UTF-8");
+
+require_once '../utility/Database.php';
+require_once '../controllers/Employee.php';
+
+try{
     $database = new Database();
     $db = $database->getConnection();
     $employee = new Employee($db);
@@ -29,4 +34,3 @@ header("Access-Control-Allow-Origin: *");
 catch(\Exception $exception){
     echo $exception->getMessage();
 }
-?>
