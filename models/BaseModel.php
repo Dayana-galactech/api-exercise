@@ -3,6 +3,7 @@
 namespace Models;
 use PDO;
 use Utility\Database;
+require_once '../utility/Database.php';
 abstract class BaseModel {
   public $pdo;
   public $id;

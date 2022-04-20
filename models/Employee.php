@@ -2,14 +2,15 @@
 
 namespace Models;
 use PDO;
+require_once 'BaseModel.php';
 class Employee extends BaseModel {
   const TABLE_NAME = 'employee';
   public $firstname;
   public $gender;
  
 
-  public function __construct($db) {
-    parent::__construct($db);
+  public function __construct() {
+    parent::__construct();
   }
 
   public function getTableName() {
@@ -22,7 +23,7 @@ class Employee extends BaseModel {
     }
     
  
-  public function getByID($id){
+  public function getByID(int $id){
     return parent::getBYID();
     $result= json_encode(['success' => 1,'data' => $data,]);
   }
@@ -49,3 +50,4 @@ class Employee extends BaseModel {
       'message' => 'Employee deleted successfully.']);
   }
 }
+
