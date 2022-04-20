@@ -19,17 +19,17 @@ class Employee extends BaseModel {
 
   public function getAll() {
     return parent::getAll(); 
-    json_encode(['success' => 1,'data' => $data,]);
+    json_encode(['success' => 1,'data' => $this->data,]);
     }
     
  
   public function getByID(int $id){
-    return parent::getBYID();
-    $result= json_encode(['success' => 1,'data' => $data,]);
+    return parent::getByID($this->id);
+    $result= json_encode(['success' => 1,'data' => $this->data,]);
   }
 
   public function create(array $data){
-    return parent::create();
+    return parent::create($this->data);
     echo json_encode([
       'status' => 'ok',
       'message' => 'Employee created successfully.'
@@ -37,7 +37,7 @@ class Employee extends BaseModel {
   }
 
   public function update(int $id, array $data){
-    return parent::update();
+    return parent::update($this->id, $this->data);
     echo json_encode([
       'status' => 'ok',
       'message' => 'Employee updated successfully.'
@@ -45,7 +45,7 @@ class Employee extends BaseModel {
   }
 
   public function delete(int $id){
-    return parent::delete();
+    return parent::delete($this->id);
     $result= json_encode(['status' => 'ok',
       'message' => 'Employee deleted successfully.']);
   }
