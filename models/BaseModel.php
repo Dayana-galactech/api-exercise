@@ -17,28 +17,55 @@ abstract class BaseModel {
   abstract function getTableName();
   
  
-   public function getAll() {
-      $sql = "SELECT * FROM " . $this->TABLE_NAME;
+   public function getAll($page=null,$count=null) {
+     if($page=null & $count=null){
+      $page=0;
+      $count=10;
+      $start = ($page) * $count;
+     }
+     elseif($page=null){
+      $page=0;
+      $start = ($page) * $count;
+     }
+     elseif($count=null){
+      $count=0;
+      $start = ($page-1) * $count;
+     }
+     else {
+      $start = ($page-1) * $count; 
+      }
+      $sql = "SELECT * FROM " . $this->TABLE_NAME." LIMIT " . $start . ',' . $count;
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute();
-      $rowCount = $stmt->rowCount();
-      
-        $data = $stmt->fetchAll();
-        
+      $data = $stmt->fetchAll();    
    
    return  $data;
   }
 
-  public function getByID(int $id){
+  public function getByID(int $id,$page=null,$count=null){
+    if($page=null & $count=null){
+      $page=0;
+      $count=10;
+      $start = ($page) * $count;
+     }
+     elseif($page=null){
+      $page=0;
+      $start = ($page) * $count;
+     }
+     elseif($count=null){
+      $count=0;
+      $start = ($page-1) * $count;
+     }
+     else {
+      $start = ($page-1) * $count; 
+      }
 
-    $sql = "SELECT * FROM " . $this->TABLE_NAME . "WHERE id=?";
+    $sql = "SELECT * FROM " . $this->TABLE_NAME . "WHERE id=? LIMIT " . $start . ',' . $count;
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute();
-    $rowCount = $stmt->rowCount();
-    
-      $data = $stmt->fetchAll();
+    // $rowCount = $stmt->rowCount();
+    $data = $stmt->fetchAll();
      
-  
   return  $data;
   }
 
