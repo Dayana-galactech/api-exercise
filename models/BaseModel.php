@@ -54,17 +54,17 @@ abstract class BaseModel {
   }
 
   public function create(array $data){
-    $column = implode(", ",array_keys($data));
-    $value  = implode(", ", array_values($data));
-    $sql = "INSERT ". $this->TABLE_NAME ."($column) VALUES('$value')";
+    $keys = array_keys($data);
+    $values  = array_values($data);
+    $questionMarks = array_fill(0, count($keys), '?');
+
+    $sql = "INSERT INTO ". $this->TABLE_NAME ." (".implode(',', $keys).") VALUES(".implode(',', $questionMarks).");";
     $stmt = $this->pdo->prepare($sql);
 
-    $this->column=htmlspecialchars(strip_tags($this->column));
-
-    $stmt->bindParam("$value", $this->column,$this->pdo=PDO::PARAM_STR);
-
+//    $stmt->bindParam("$value", $this->column,$this->pdo=PDO::PARAM_STR);
+    $stmt->execute($values);
     $record= $stmt->execute();
-
+    var_dump($record);exit;
   return $record; 
   }
 
