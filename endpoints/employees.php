@@ -5,8 +5,8 @@ use Models\Employee;
 
 
 require_once '../utility/Database.php';
-require_once 'BaseModel.php';
-require_once 'Employee.php';
+require_once '../models/BaseModel.php';
+require_once '../models/Employee.php';
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
@@ -17,17 +17,29 @@ $requestMethod = $_SERVER["REQUEST_METHOD"];
 $userEntity = new Employee();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if ($this->id) {
-        $user = $userEntity->getByID($this->id);
+    if (isset($_GET['id']) && $_GET['id']) {
+        $user = $userEntity->getByID($_GET['id']);
     } else {
-        $user = $userEntity->getAll();
+        try {
+          $users = $userEntity->getAll();
+          echo json_encode([
+            'status' => 'ok',
+            'data' => $users
+          ]);
+        } catch (\Exception $e) {
+          echo json_encode([
+            'status' => 'error',
+            'msg' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+          ]);
+        }
     }
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $user = $userEntity->create($this->data);
+    $user = $userEntity->create($_POST);
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'PUT'){
-    $user = $userEntity->update($this->id, $this->data);
+    $user = $userEntity->update($_POST['id'], $_POST);
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
     $user = $userEntity->delete($this->id);

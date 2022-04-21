@@ -13,7 +13,7 @@ class Database {
     // private $password = '';
  
    
-    public function getConnection(){
+    public static function getConnection(){
          $pdo=null;
         // $var=file_get_contents('./credentials.json');
         // $config=json_decode($var);

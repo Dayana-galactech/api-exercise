@@ -16,11 +16,6 @@ class Employee extends BaseModel {
   public function getTableName() {
     return self::TABLE_NAME;
   }
-
-  public function getAll($page=null,$count=null) {
-    return parent::getAll($this->page,$this->count); 
-    json_encode(['success' => 1,'data' => $this->data,]);
-    }
     
  
   public function getByID(int $id,$page=null,$count=null){
