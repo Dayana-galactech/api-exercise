@@ -39,7 +39,9 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $user = $userEntity->create($_POST);
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'PUT'){
-    $user = $userEntity->update($_POST['id'], $_POST);
+    $params = [];
+    parse_str(file_get_contents("php://input"),$params);
+    $user = $userEntity->update($params['id'], $params);
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
     $user = $userEntity->delete($this->id);
