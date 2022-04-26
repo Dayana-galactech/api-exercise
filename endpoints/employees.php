@@ -44,5 +44,6 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'PUT'){
     $user = $userEntity->update($params['id'], $params);
 }
 elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
-    $user = $userEntity->delete($this->id);
+  if (isset($_GET['id']) && $_GET['id']) {
+    $user = $userEntity->delete($_GET['id']);}
 }
