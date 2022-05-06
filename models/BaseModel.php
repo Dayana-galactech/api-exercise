@@ -62,12 +62,11 @@ array_push($values,$v);
     // $keys=implode(',',$keys);
     // $values=implode(',',$values);
     // $questionMarks = array_fill(0, count($keys), '?');
-  var_dump($sql = "UPDATE ". $this->TABLE_NAME ." SET ".$keys[1]."='".$values[1]."',".$keys[2]."='".$values[2]."' WHERE id=?");
+  $sql = "UPDATE ". $this->TABLE_NAME ." SET ".$keys[1]."='".$values[1]."',".$keys[2]."='".$values[2]."' WHERE id=?";
   $stmt = $this->pdo->prepare($sql);
   $stmt->execute([$id]);
   $record= $stmt->execute();
- 
-  return $record; 
+    return $record; 
   } 
 
   public function delete(int $id){
