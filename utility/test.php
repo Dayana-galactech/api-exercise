@@ -11,13 +11,12 @@ $employee = new \Models\Employee();
 //   'gender' => 'female'
 // ]);
 
-// $results = $employee->getByID(70);
+// $results = $employee->getByID(77);
 // echo json_encode($results);
 
-// $results = $employee->update(70,[
-//   'firstname' => 'Rachel',  
-//   'gender' => 'female'
-// ]);
+$results = $employee->update(62,[
+  'firstname' => 'Dayananew',  
+  'gender' => 'female'   
+]);
 
-$results = $employee->delete(74);
-echo json_encode($results);
+// $results = $employee->delete(60);

@@ -42,24 +42,31 @@ abstract class BaseModel {
 
     $sql = "INSERT INTO ". $this->TABLE_NAME ." (".implode(',', $keys).") VALUES(".implode(',', $questionMarks).");";
     $stmt = $this->pdo->prepare($sql);
-
-//    $stmt->bindParam("$value", $this->column,$this->pdo=PDO::PARAM_STR);
-    $stmt->execute($values);
-    $record= $stmt->execute();
+    $record=$stmt->execute($values);
+    
    
   return $record; 
   }
 
 
   public function update(int $id, array $data){
-    $keys = array_keys($data);
-    $values  = array_values($data);
-    $questionMarks = array_fill(0, count($keys), '?');
-   var_dump( $sql = "UPDATE ". $this->TABLE_NAME ." SET (".implode(',', $keys).") VALUES(".implode(',', $questionMarks).") WHERE id=?");
+$keys=array();
+$values=array();
+foreach ($data as $x=>$v){
+array_push($keys,$x);
+array_push($values,$v);
+}
+
+    // $keys = array_keys($data);
+    // $values  = array_values($data);
+    // $keys=implode(',',$keys);
+    // $values=implode(',',$values);
+    // $questionMarks = array_fill(0, count($keys), '?');
+  var_dump($sql = "UPDATE ". $this->TABLE_NAME ." SET ".$keys[1]."='".$values[1]."',".$keys[2]."='".$values[2]."' WHERE id=?");
   $stmt = $this->pdo->prepare($sql);
-  $stmt->execute([$id,$values]);
+  $stmt->execute([$id]);
   $record= $stmt->execute();
-  var_dump($record);exit;
+ 
   return $record; 
   } 
 
