@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2022 at 10:12 AM
+-- Generation Time: May 17, 2022 at 03:39 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.1.12
 
@@ -41,7 +41,8 @@ CREATE TABLE `employee` (
 --
 
 CREATE TABLE `tokens` (
-  `username` varchar(255) NOT NULL,
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -71,7 +72,7 @@ ALTER TABLE `employee`
 -- Indexes for table `tokens`
 --
 ALTER TABLE `tokens`
-  ADD PRIMARY KEY (`username`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -88,6 +89,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `employee`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+
+--
+-- AUTO_INCREMENT for table `tokens`
+--
+ALTER TABLE `tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

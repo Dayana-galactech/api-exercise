@@ -16,24 +16,32 @@ $database = new Database();
 $db = $database->getConnection();
 $table = 'users';
 
-if(isset($_POST['email']) && isset($_POST['password'])){
-$email = htmlspecialchars($_POST['email']);
-$password = htmlspecialchars($_POST['password']);
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    $email = htmlspecialchars($_POST['email']);
+    $password = htmlspecialchars($_POST['password']);
 }
 
 
 $query = "SELECT * FROM " . $table . " WHERE email = ?";
-$stmt = $db->prepare( $query );
+$stmt = $db->prepare($query);
 $stmt->bindParam(1, $email);
 $stmt->execute();
 $num = $stmt->rowCount();
 
-if($num > 0){
+$query2="SELECT username FROM users WHERE email=?";
+$stmt2 = $db->prepare($query2);
+$stmt2->bindParam(1, $email);
+$stmt2->execute();
+$row = $stmt2->fetchAll();
+foreach ($row as $name) {
+   $username= htmlspecialchars($name->username);
+}
+
+if ($num > 0) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $password2 = $row['password'];
 
-    if(password_verify($password, $password2))
-    {
+    if (password_verify($password, $password2)) {
         $secret_key = "secretKey";
         $issuer_claim = "localhost";
         $audience_claim = "localhost";
@@ -47,30 +55,39 @@ if($num > 0){
             "nbf" => $notbefore_claim,
             "exp" => $expire_claim,
             "data" => array(
-                "email" => $email
-        ));
+                "email" => $email,
+                "password" => $password2,
+                "username" => $username
+            )
+        );
 
         http_response_code(200);
 
-        $jwt = JWT::encode($token, $secret_key,'HS256');
+        $jwt = JWT::encode($token, $secret_key, 'HS256');
         echo json_encode(
             array(
                 "message" => "Successful login.",
                 "jwt" => $jwt,
                 "email" => $email,
                 "expireAt" => $expire_claim
-            ));
-    }
-    else{
+            )
+        );
+        $tokens = 'tokens';
+        $data = "INSERT INTO " . $tokens . " (email,token) VALUES(:email, :jwt )";
+        $stmt2 = $db->prepare($data);
+        $stmt2->bindParam(':email', $email);
+        $stmt2->bindParam(':jwt', $jwt);
+        if ($stmt2->execute()) {
+            echo json_encode(array("message" => "token was successfully registered."));
+        } else {
+            echo json_encode(array("message" => "Unable to register the token."));
+        }
+    } else {
 
         http_response_code(401);
         echo json_encode(array("message" => "Login failed.", "password" => $password));
     }
-}
-else {
+} else {
     http_response_code(401);
-        echo json_encode(array("message" => "Login failed."));
+    echo json_encode(array("message" => "Login failed."));
 }
-?>
-
-
