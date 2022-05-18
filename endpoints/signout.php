@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 use Utility\Database;
 
 require_once '../utility/Database.php';
@@ -11,27 +11,13 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $database = new Database();
 $db = $database->getConnection();
-
-
-if (isset($_GET['id']) && $_GET['id']) {
-    $id=$_GET['id'];
-    $query = "SELECT token FROM tokens WHERE id=?";
+if(isset($_GET['id']) && $_GET['id']){
+    $id = $_GET['id'];
+    $query="DELETE FROM tokens WHERE id=?";
     $stmt = $db->prepare($query);
     $stmt->bindParam(1, $id);
     $stmt->execute();
-    $row = $stmt->fetchAll();
-    foreach ($row as $token) {
-        $jwt = $token->token;
-    }
-   $q="SELECT * from users INNER JOIN tokens on users.id=tokens.id WHERE tokens.id=?";
-   $stmt2 = $db->prepare($q);
-   $stmt2->bindParam(1, $id);
-   $stmt2->execute();
-   $row2 = $stmt2->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
-   echo json_encode([
-    'status' => 'ok',
-    'data' => $row2
-  ]);
-
-
+    unset($_SESSION['id']);
+    session_destroy();
 }
+?>
