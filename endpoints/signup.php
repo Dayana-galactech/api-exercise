@@ -13,12 +13,14 @@ $con = null;
 
 $database = new Database();
 $con = $database->getConnection();
+
 try{
-    if(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])){
+ if(isset($_POST['submit'])){
+
 $username = htmlspecialchars($_POST['username']);
 $email = htmlspecialchars($_POST['email']);
 $password = htmlspecialchars($_POST['password']);
-} 
+ 
 
 $table = 'users';
 
@@ -43,6 +45,7 @@ else{
 
     echo json_encode(array("message" => "Unable to register the user."));
 }
+ }
 }catch(PDOException $e){
     $error = "Error: " . $e->getMessage();
     echo '  alert("'.$error.'");';
