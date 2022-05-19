@@ -14,39 +14,48 @@ $con = null;
 $database = new Database();
 $con = $database->getConnection();
 
-try{
- if(isset($_POST['submit'])){
+try {
+    if (!empty($_POST['username']) && !empty($_POST['email'])  && !empty($_POST['password'])) {
+        $username = htmlspecialchars($_POST['username']);
+        $email = htmlspecialchars($_POST['email']);
+        $password = htmlspecialchars($_POST['password']);
 
-$username = htmlspecialchars($_POST['username']);
-$email = htmlspecialchars($_POST['email']);
-$password = htmlspecialchars($_POST['password']);
- 
+        $table = 'users';
 
-$table = 'users';
+        $q = $con->prepare("SELECT `email` FROM $table WHERE `email` = ?");
+        $q->bindValue(1, $email);
+        $q->execute();
 
-$query = "INSERT INTO " . $table . " (username,email,password) VALUES(:username, :email, :password)";
+        if ($q->rowCount() > 0) { 
+            echo "Email already exists";
+        } else {
 
-$stmt = $con->prepare($query);
+            $query = "INSERT INTO " . $table . " (username,email,password) VALUES(:username, :email, :password)";
 
-$stmt->bindParam(':username', $username);
-$stmt->bindParam(':email', $email);
+            $stmt = $con->prepare($query);
 
-$password_hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
 
-$stmt->bindParam(':password', $password_hash);
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-if($stmt->execute()){
+            $stmt->bindParam(':password', $password_hash);
 
-    http_response_code(200);
-    echo json_encode(array("message" => "User was successfully registered."));
-}
-else{
-    http_response_code(400);
+            if ($stmt->execute()) {
 
-    echo json_encode(array("message" => "Unable to register the user."));
-}
- }
-}catch(PDOException $e){
+                http_response_code(200);
+                echo "User was successfully registered.";
+            } else {
+                http_response_code(400);
+
+                echo "Unable to register the user.";
+            }
+        }
+    } else {
+        http_response_code(400);
+        echo "Some fields are empty!";
+    }
+} catch (PDOException $e) {
     $error = "Error: " . $e->getMessage();
-    echo '  alert("'.$error.'");';
+    echo '  alert("' . $error . '");';
 }

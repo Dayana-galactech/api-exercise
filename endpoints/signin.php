@@ -1,5 +1,5 @@
 <?php
-
+$_SESSION['id']=$id;
 include '../vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
@@ -64,14 +64,7 @@ if ($num > 0) {
         http_response_code(200);
 
         $jwt = JWT::encode($token, $secret_key, 'HS256');
-        echo json_encode(
-            array(
-                "message" => "Successful login.",
-                "jwt" => $jwt,
-                "email" => $email,
-                "expireAt" => $expire_claim
-            )
-        );
+      
         $q = "SELECT id FROM users WHERE email = ?";
         $stmt3 = $db->prepare($q);
         $stmt3->bindParam(1, $email);
@@ -86,16 +79,17 @@ if ($num > 0) {
         $stmt2->bindParam(':id', $id);
         $stmt2->bindParam(':jwt', $jwt);
         if ($stmt2->execute()) {
-            echo json_encode(array("message" => "token was successfully registered."));
+            echo "token was successfully registered.";
+            header("location: http://localhost:8012/api-exercise/views/");
         } else {
-            echo json_encode(array("message" => "Unable to register the token."));
+            echo "Unable to register the token.";
         }
     } else {
 
         http_response_code(401);
-        echo json_encode(array("message" => "Login failed.", "password" => $password));
+        echo "Login failed, password ".$password;
     }
 } else {
     http_response_code(401);
-    echo json_encode(array("message" => "Login failed."));
+    echo "Login failed.";
 }

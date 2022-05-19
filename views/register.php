@@ -12,24 +12,27 @@
 
 <body>
 <div class="container pt-5 mt-5">
-<form action="endpoints/signup.php" method="POST">
+    <div id="response"></div>
+<form method="POST" id="register" onsubmit="return fetchcall();" >
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" name="username" >
+            <input type="text" class="form-control" id="username" name="username" >
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" aria-describedby="emailHelp">
+            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
             
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" class="form-control">
+            <input type="password" name="password" id="password" class="form-control">
         </div>
         <div class=" text-center ">
         <button type="submit" name="submit" class="btn btn-primary">Register</button></div>
     </form>
 </div>
+<script src="../js/valid.js"></script>
+<script src="../js/register.js"> </script>
 </body>
 
 </html>
