@@ -42,8 +42,14 @@ class URLRouter {
 
   public static function execute($requestMethod, $url) {
     list ($controller, $action) = self::$routes[$requestMethod][$url];
-    $className = "\\Controllers\\" . $controller;
+    $className = "Controllers\\" . $controller;
     $class =  new $className();
-    return $class->{$action}();
+
+    $params = [];
+    parse_str(file_get_contents("php://input"),$params);
+
+    return $class->{$action}([
+      'data' => array_merge($_GET, $_POST, $params)
+    ]);
   }
 }

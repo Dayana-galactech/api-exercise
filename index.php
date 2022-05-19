@@ -19,6 +19,7 @@ $requestMethod = $_SERVER["REQUEST_METHOD"];
 
 if (!URLRouter::isValid($requestMethod, $url)) {
   echo json_encode(['status' => 'error', 'code' => '404']);
+  return;
 }
 
 $response = URLRouter::execute($requestMethod, $url);

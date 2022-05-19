@@ -6,7 +6,7 @@ use Models\Employee;
 
 class EmployeeController{
 
-    public function index($data = array()) {
+    public function index($request = array()) {
         $employees = new Employee();
         $employeesData = $employees->getAll();
 
@@ -16,15 +16,15 @@ class EmployeeController{
         );
     }
 
-    public function show($data = array()) {
-      if (!isset($data['id'])) {
+    public function show($request = array()) {
+      if (!isset($request['data']['id'])) {
         return array(
           'status' => 'error',
           'message' => 'please provide an employee id'
         );
       }
 
-      $employeeID = intval($data['id']);
+      $employeeID = intval($request['data']['id']);
 
       $employees = new Employee();
       $employee  = $employees->getByID($employeeID);
@@ -35,41 +35,41 @@ class EmployeeController{
       );
     }
 
-    public function create($data = array()) {
+    public function create($request = array()) {
 
     }
 
-    public function store($data = array()) {
-        $data['firstname']  = htmlspecialchars(strip_tags($data['firstname']));
-        $data['gender']     = htmlspecialchars(strip_tags($data['gender']));
+    public function store($request = array()) {
+        $request['data']['firstname']  = htmlspecialchars(strip_tags($request['data']['firstname']));
+        $request['data']['gender']     = htmlspecialchars(strip_tags($request['data']['gender']));
 
         $employees = new Employee();
-        $status = $employees->create($data);
+        $status = $employees->create($request['data']);
 
         return array(
           'status' => $status ? 'ok' : 'error'
         );
     }
 
-    public function edit($data = array()) {
+    public function edit($request = array()) {
 
     }
 
-    public function update($data = array()) {
-      $id = $data['id'];
-      unset($data['id']);
+    public function update($request = array()) {
+      $id = $request['data']['id'];
+      unset($request['data']['id']);
 
       $employees = new Employee();
 
-      $status = $employees->update($id, $data);
+      $status = $employees->update($id, $request['data']);
 
       return array(
         'status' => $status ? 'ok' : 'error'
       );
     }
 
-    public function destroy($data = array()) {
-      if (!isset($data['id'])) {
+    public function destroy($request = array()) {
+      if (!isset($request['data']['id'])) {
         return array(
           'status' => 'error',
           'message' => 'please provide an employee id'
@@ -78,7 +78,7 @@ class EmployeeController{
 
       $employees = new Employee();
 
-      $status = $employees->delete($data['id']);
+      $status = $employees->delete($request['data']['id']);
 
       return array(
         'status' => $status ? 'ok' : 'error'
