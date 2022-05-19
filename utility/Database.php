@@ -12,25 +12,26 @@ class Database {
     // private $username = 'root';
     // private $password = '';
  
-    public $pdo;
-    public function getConnection(){
+   
+    public static function getConnection(){
+         $pdo=null;
         // $var=file_get_contents('./credentials.json');
         // $config=json_decode($var);
         
-        $this->pdo = null;
+        
         try{
             $var=file_get_contents('../credentials.json');
             $config= (array)json_decode($var);
             
-            $this->pdo = new PDO("mysql:host=" . $config['host'] . ";dbname=" .$config['dbname'], $config['user'], $config['password']);
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_OBJ);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->pdo->exec("set names utf8");
+            $pdo = new PDO("mysql:host=" . $config['host'] . ";dbname=" .$config['dbname'], $config['user'], $config['password']);
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_OBJ);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->exec("set names utf8");
             
         }catch(Exception $exception){
            echo $exception->getMessage();
         }
-        return $this->pdo;
+        return $pdo;
     }
 }  
 

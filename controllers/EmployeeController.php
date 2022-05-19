@@ -4,7 +4,7 @@ namespace Controllers;
 
 use PDO;
 
-class Employee{
+class EmployeeController{
     public $pdo;
     private $db_table = "employee";
     public $id;
