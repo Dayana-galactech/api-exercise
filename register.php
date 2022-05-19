@@ -12,7 +12,8 @@
 
 <body>
 <div class="container pt-5 mt-5">
-<form action="endpoints/signup.php" method="POST">
+    <p id="responseMessage"></p>
+<form action="endpoints/signup.php" method="POST" onsubmit="">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" name="username" >
@@ -30,6 +31,15 @@
         <button type="submit" name="submit" class="btn btn-primary">Register</button></div>
     </form>
 </div>
+<script>
+    function signup() {
+        fetch('http://localhost:8080/endpoints/signup.php', {
+            body p
+        }).then((repsonse) => {
+
+        })
+    }
+</script>
 </body>
 
 </html>

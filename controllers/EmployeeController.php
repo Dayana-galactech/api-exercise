@@ -2,40 +2,86 @@
 
 namespace Controllers;
 
-use PDO;
+use Models\Employee;
 
 class EmployeeController{
-    public $pdo;
-    private $db_table = "employee";
-    public $id;
-    public $firstname;
-    public $gender;
-    
-    public function __construct($db){
-        $this->pdo = $db;
-       
+
+    public function index($data = array()) {
+        $employees = new Employee();
+        $employeesData = $employees->getAll();
+
+        return array(
+          'status' => 'ok',
+          'data' => $employeesData
+        );
     }
-    
-    public function getEmployees(){
-        $sql = "SELECT id, firstname, gender FROM " . $this->db_table . "";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        return $stmt;
+
+    public function show($data = array()) {
+      if (!isset($data['id'])) {
+        return array(
+          'status' => 'error',
+          'message' => 'please provide an employee id'
+        );
+      }
+
+      $employeeID = intval($data['id']);
+
+      $employees = new Employee();
+      $employee  = $employees->getByID($employeeID);
+
+      return array(
+        'status' => 'ok',
+        'data' => $employee
+      );
     }
-    public function createEmployee(){
-        $sql = "INSERT ". $this->db_table ."(firstname,gender) VALUES(:firstname,:gender)";
 
-        $stmt = $this->pdo->prepare($sql);
+    public function create($data = array()) {
 
-        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
-        $this->gender=htmlspecialchars(strip_tags($this->gender));  
+    }
 
-        $stmt->bindParam(":firstname", $this->firstname,$this->pdo=PDO::PARAM_STR);
-        $stmt->bindParam(":gender", $this->gender,$this->pdo=PDO::PARAM_STR); 
+    public function store($data = array()) {
+        $data['firstname']  = htmlspecialchars(strip_tags($data['firstname']));
+        $data['gender']     = htmlspecialchars(strip_tags($data['gender']));
 
-        if($stmt->execute()){
-            return true;
-         }
-         return false;
+        $employees = new Employee();
+        $status = $employees->create($data);
+
+        return array(
+          'status' => $status ? 'ok' : 'error'
+        );
+    }
+
+    public function edit($data = array()) {
+
+    }
+
+    public function update($data = array()) {
+      $id = $data['id'];
+      unset($data['id']);
+
+      $employees = new Employee();
+
+      $status = $employees->update($id, $data);
+
+      return array(
+        'status' => $status ? 'ok' : 'error'
+      );
+    }
+
+    public function destroy($data = array()) {
+      if (!isset($data['id'])) {
+        return array(
+          'status' => 'error',
+          'message' => 'please provide an employee id'
+        );
+      }
+
+      $employees = new Employee();
+
+      $status = $employees->delete($data['id']);
+
+      return array(
+        'status' => $status ? 'ok' : 'error'
+      );
     }
 }    

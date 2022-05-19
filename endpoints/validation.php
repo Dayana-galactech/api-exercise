@@ -28,10 +28,15 @@ if (isset($_GET['id']) && $_GET['id']) {
    $stmt2->bindParam(1, $id);
    $stmt2->execute();
    $row2 = $stmt2->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
-   echo json_encode([
-    'status' => 'ok',
-    'data' => $row2
-  ]);
+   if (isset($_GET['showhtml'])) {
+     echo "<div>".$row2[3][0]['username']."</div>";
+   } else {
+     echo json_encode([
+       'status' => 'ok',
+       'data' => $row2
+     ]);
+   }
+
 
 
 }
