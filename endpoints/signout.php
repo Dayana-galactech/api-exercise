@@ -1,5 +1,4 @@
 <?php
-session_start();
 use Utility\Database;
 
 require_once '../utility/Database.php';
@@ -17,7 +16,5 @@ if(isset($_GET['id']) && $_GET['id']){
     $stmt = $db->prepare($query);
     $stmt->bindParam(1, $id);
     $stmt->execute();
-    unset($_SESSION['id']);
-    session_destroy();
 }
 ?>

@@ -11,23 +11,27 @@
 </head>
 
 <body>
-<div class="container pt-5 mt-5">
-    <div id="response"></div>
-<form action="../endpoints/signin.php" method="POST" id="login"  >
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
-            
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" id="password" class="form-control">
-        </div>
-        <div class=" text-center ">
-        <button type="submit" name="submit" class="btn btn-primary">Login</button></div>
-    </form>
-</div>
-<script src="../js/login.js"> </script>
+    <div class="container pt-5 mt-5">
+        <div id="responselogin"></div>
+        <?php $secret="secretKey";
+        $csrf = hash_hmac('SHA256','a string', $secret); ?>
+        <form method="POST" id="login" onsubmit="return login()">
+            <input type="hidden" name="csrf" value="<?php echo $csrf?>">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control">
+            </div>
+            <div class=" text-center ">
+                <button type="submit" name="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+    <script src="../js/login.js"> </script>
 </body>
 
 </html>

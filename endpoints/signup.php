@@ -13,43 +13,50 @@ $con = null;
 
 $database = new Database();
 $con = $database->getConnection();
-
+$secret = 'secretKey';
+$csrf = hash_hmac('SHA256', 'a string', $secret);
 try {
     if (!empty($_POST['username']) && !empty($_POST['email'])  && !empty($_POST['password'])) {
-        $username = htmlspecialchars($_POST['username']);
-        $email = htmlspecialchars($_POST['email']);
-        $password = htmlspecialchars($_POST['password']);
 
-        $table = 'users';
+        if (isset($_POST['csrf']) && hash_equals($csrf, $_POST['csrf'])) {
+            $username = htmlspecialchars($_POST['username']);
+            $email = htmlspecialchars($_POST['email']);
+            $password = htmlspecialchars($_POST['password']);
 
-        $q = $con->prepare("SELECT `email` FROM $table WHERE `email` = ?");
-        $q->bindValue(1, $email);
-        $q->execute();
+            $table = 'users';
 
-        if ($q->rowCount() > 0) { 
-            echo "Email already exists";
-        } else {
+            $q = $con->prepare("SELECT `email` FROM $table WHERE `email` = ?");
+            $q->bindValue(1, $email);
+            $q->execute();
 
-            $query = "INSERT INTO " . $table . " (username,email,password) VALUES(:username, :email, :password)";
-
-            $stmt = $con->prepare($query);
-
-            $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':email', $email);
-
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-            $stmt->bindParam(':password', $password_hash);
-
-            if ($stmt->execute()) {
-
-                http_response_code(200);
-                echo "User was successfully registered.";
+            if ($q->rowCount() > 0) {
+                echo "Email already exists";
             } else {
-                http_response_code(400);
 
-                echo "Unable to register the user.";
+                $query = "INSERT INTO " . $table . " (username,email,password) VALUES(:username, :email, :password)";
+
+                $stmt = $con->prepare($query);
+
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':email', $email);
+
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+                $stmt->bindParam(':password', $password_hash);
+
+                if ($stmt->execute()) {
+
+                    http_response_code(200);
+                    echo "User was successfully registered.";
+                    include("signin.php");
+                } else {
+                    http_response_code(400);
+
+                    echo "Unable to register the user.";
+                }
             }
+        } else {
+            echo "csrf not valid";
         }
     } else {
         http_response_code(400);
