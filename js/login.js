@@ -1,7 +1,6 @@
-
-function fetchcall() {
-    var data = new FormData(document.getElementById("register"));
-    fetch('../endpoints/signup.php', {
+function login() {
+    var data = new FormData(document.getElementById("login"));
+    fetch('../endpoints/signin.php', {
         method: 'POST',
         body: data,
     })
