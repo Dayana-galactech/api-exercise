@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../vendor/autoload.php';
 
 use Utility\Database;
@@ -48,7 +49,7 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['csrf'])
       );
 
       http_response_code(200);
-      header("location: /views/index.php");
+      header("location: ../views/index.php");
     } else {
       http_response_code(401);
       echo "Login failed, password " . $password;

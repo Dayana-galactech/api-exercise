@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 use Utility\Database;
 
 require_once '../utility/Database.php';
@@ -14,7 +14,8 @@ $con = null;
 $database = new Database();
 $con = $database->getConnection();
 $secret = 'secretKey';
-$csrf = hash_hmac('SHA256', 'a string', $secret);
+$csrf = $_SESSION['csrf_token'];
+
 try {
     if (!empty($_POST['username']) && !empty($_POST['email'])  && !empty($_POST['password'])) {
 
