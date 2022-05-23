@@ -13,8 +13,11 @@
 <body>
     <div class="container pt-5 mt-5">
         <div id="responselogin"></div>
-        <?php $secret="secretKey";
-        $csrf = hash_hmac('SHA256','a string', $secret); ?>
+        <?php
+            $secret="secretKey";
+            $csrf = hash_hmac('SHA256', uniqid(microtime()), $secret);
+            $_SESSION['csrf_token'] = $csrf;
+        ?>
         <form method="POST" id="login" onsubmit="return login()">
             <input type="hidden" name="csrf" value="<?php echo $csrf?>">
             <div class="mb-3">
