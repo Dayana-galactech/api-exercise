@@ -1,9 +1,9 @@
 <?php
 
 namespace Models;
-use PDO;
 use Utility\Database;
-require_once '../utility/Database.php';
+require_once './utility/Database.php';
+
 abstract class BaseModel {
   public $pdo;
   public $id;
@@ -26,9 +26,8 @@ abstract class BaseModel {
     return  $data;
   }
 
-  public function getByID(int $id,$page=0,$count=10){
-    $start = ($page) * $count;
-    $sql = "SELECT * FROM " . $this->TABLE_NAME . " WHERE id =?  LIMIT " . $start . ',' . $count;
+  public function getByID($id){
+    $sql = "SELECT * FROM " . $this->TABLE_NAME . " WHERE id =?;";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$id]);
     $data = $stmt->fetchAll();
@@ -50,22 +49,17 @@ abstract class BaseModel {
 
 
   public function update(int $id, array $data){
-$keys=array();
-$values=array();
-foreach ($data as $x=>$v){
-array_push($keys,$x);
-array_push($values,$v);
-}
+    $keys=array();
+    $values=array();
+    foreach ($data as $x=>$v){
+      array_push($keys,$x);
+      array_push($values,$v);
+    }
 
-    // $keys = array_keys($data);
-    // $values  = array_values($data);
-    // $keys=implode(',',$keys);
-    // $values=implode(',',$values);
-    // $questionMarks = array_fill(0, count($keys), '?');
-  $sql = "UPDATE ". $this->TABLE_NAME ." SET ".$keys[1]."='".$values[1]."',".$keys[2]."='".$values[2]."' WHERE id=?";
-  $stmt = $this->pdo->prepare($sql);
-  $stmt->execute([$id]);
-  $record= $stmt->execute();
+    $sql = "UPDATE ". $this->TABLE_NAME ." SET ".$keys[1]."='".$values[1]."',".$keys[2]."='".$values[2]."' WHERE id=?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$id]);
+    $record= $stmt->execute();
     return $record; 
   } 
 
@@ -73,7 +67,7 @@ array_push($values,$v);
     $sql = "DELETE FROM " . $this->TABLE_NAME . " WHERE id=?";
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$id]);
-  return  $stmt;
+    return  $stmt;
   }
 
 }

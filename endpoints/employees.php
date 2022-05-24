@@ -1,49 +1,28 @@
 <?php
 
 
-use Models\Employee;
+use Controllers\EmployeeController;
 
 
-require_once '../utility/Database.php';
-require_once '../models/BaseModel.php';
-require_once '../models/Employee.php';
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-$requestMethod = $_SERVER["REQUEST_METHOD"];
+$employeeController = new EmployeeController();
 
-$userEntity = new Employee();
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (isset($_GET['id']) && $_GET['id']) {
-        $user = $userEntity->getByID($_GET['id']);
+switch ($_SERVER['REQUEST_METHOD']) {
+  case 'GET':
+    if (isset($_GET['id'])) {
+      return $employeeController->show($_GET);
     } else {
-        try {
-          $users = $userEntity->getAll();
-          echo json_encode([
-            'status' => 'ok',
-            'data' => $users
-          ]);
-        } catch (\Exception $e) {
-          echo json_encode([
-            'status' => 'error',
-            'msg' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-          ]);
-        }
+      return $employeeController->index($_GET);
     }
-}
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $user = $userEntity->create($_POST);
-}
-elseif ($_SERVER['REQUEST_METHOD'] === 'PUT'){
+
+  case 'POST':
+    return $employeeController->store($_POST);
+
+  case 'PUT':
     $params = [];
     parse_str(file_get_contents("php://input"),$params);
-    $user = $userEntity->update($params['id'], $params);
-}
-elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
-  if (isset($_GET['id']) && $_GET['id']) {
-    $user = $userEntity->delete($_GET['id']);}
+    return $employeeController->update($params);
+
+  case 'DELETE':
+    return $employeeController->destroy($_GET);
+
 }
