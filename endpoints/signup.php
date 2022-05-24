@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 use Utility\Database;
 
 require_once '../utility/Database.php';
@@ -13,40 +13,57 @@ $con = null;
 
 $database = new Database();
 $con = $database->getConnection();
+$secret = 'secretKey';
+$csrf = $_SESSION['csrf_token'];
 
-try{
- if(isset($_POST['submit'])){
+try {
+    if (!empty($_POST['username']) && !empty($_POST['email'])  && !empty($_POST['password'])) {
 
-$username = htmlspecialchars($_POST['username']);
-$email = htmlspecialchars($_POST['email']);
-$password = htmlspecialchars($_POST['password']);
- 
+        if (isset($_POST['csrf']) && hash_equals($csrf, $_POST['csrf'])) {
+            $username = htmlspecialchars($_POST['username']);
+            $email = htmlspecialchars($_POST['email']);
+            $password = htmlspecialchars($_POST['password']);
 
-$table = 'users';
+            $table = 'users';
 
-$query = "INSERT INTO " . $table . " (username,email,password) VALUES(:username, :email, :password)";
+            $q = $con->prepare("SELECT `email` FROM $table WHERE `email` = ?");
+            $q->bindValue(1, $email);
+            $q->execute();
 
-$stmt = $con->prepare($query);
+            if ($q->rowCount() > 0) {
+                echo "Email already exists";
+            } else {
 
-$stmt->bindParam(':username', $username);
-$stmt->bindParam(':email', $email);
+                $query = "INSERT INTO " . $table . " (username,email,password) VALUES(:username, :email, :password)";
 
-$password_hash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $con->prepare($query);
 
-$stmt->bindParam(':password', $password_hash);
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':email', $email);
 
-if($stmt->execute()){
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    http_response_code(200);
-    echo json_encode(array("message" => "User was successfully registered."));
-}
-else{
-    http_response_code(400);
+                $stmt->bindParam(':password', $password_hash);
 
-    echo json_encode(array("message" => "Unable to register the user."));
-}
- }
-}catch(PDOException $e){
+                if ($stmt->execute()) {
+
+                    http_response_code(200);
+                    echo "User was successfully registered.";
+                    include("signin.php");
+                } else {
+                    http_response_code(400);
+
+                    echo "Unable to register the user.";
+                }
+            }
+        } else {
+            echo "csrf not valid";
+        }
+    } else {
+        http_response_code(400);
+        echo "Some fields are empty!";
+    }
+} catch (PDOException $e) {
     $error = "Error: " . $e->getMessage();
-    echo '  alert("'.$error.'");';
+    echo '  alert("' . $error . '");';
 }
