@@ -24,7 +24,6 @@
 
       // Require the controller
       require_once 'controllers/'. $this->currentController . '.php';
-
       // Instantiate controller class
       $this->currentController = new $this->currentController;
 
@@ -40,7 +39,6 @@
 
       // Get params
       $this->params = $url ? array_values($url) : [];
-
       // Call a callback with array of params
       call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
     }
@@ -49,7 +47,9 @@
       if(isset($_GET['url'])){
         $url = rtrim($_GET['url'], '/');
         $url = filter_var($url, FILTER_SANITIZE_URL);
-        $url = explode('/', $url);
+        $url = array_values(array_filter(explode('/', $url), function ($str) {
+          return !empty($str);
+        }));
         return $url;
       }
     }

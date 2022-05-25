@@ -1,7 +1,8 @@
 <?php
 
-define('URLROOT', 'http://localhost:8012/api-exercise');
-session_start();
+if(session_id() == ''){
+  session_start();
+}
 class Users extends Controller
 {
 
@@ -21,7 +22,6 @@ class Users extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if (!empty($_POST['username']) && !empty($_POST['email'])  && !empty($_POST['password'])) {
-
                 if (isset($_POST['csrf']) && hash_equals($csrf, $_POST['csrf'])) {
                     $username = htmlspecialchars($_POST['username']);
                     $email = htmlspecialchars($_POST['email']);
@@ -39,8 +39,7 @@ class Users extends Controller
 
                     //Register user from model function
                     if ($this->userModel->register($data)) {
-                        //Redirect to the login page
-                        header('location: ' . URLROOT . '/login');
+                        echo json_encode(['status' => 'ok']);
                     } else {
                         die('Something went wrong.');
                     }
@@ -51,8 +50,9 @@ class Users extends Controller
                 http_response_code(400);
                 echo "Some fields are empty!";
             }
+        } else {
+          $this->view('/register', $data);
         }
-        $this->view('/register', $data);
     }
 
     public function login()

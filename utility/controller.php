@@ -3,7 +3,7 @@
     class Controller {
         public function model($model) {
             //Require model file
-            require_once '../models/' . $model . '.php';
+            require_once './models/' . $model . '.php';
             //Instantiate model
             return new $model();
         }
