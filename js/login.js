@@ -1,6 +1,6 @@
 function login() {
     var data = new FormData(document.getElementById("login"));
-    fetch('../endpoints/signin.php', {
+    fetch('http://localhost:8012/api-exercise/users/login', {
         method: 'POST',
         body: data,
     })
