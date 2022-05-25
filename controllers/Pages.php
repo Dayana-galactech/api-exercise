@@ -9,7 +9,7 @@ class Pages extends Controller {
             'title' => 'home'
         ];
 
-        $this->view('index', $data);
+        $this->view('/index', $data);
     }
     public function register() {
   
@@ -17,7 +17,7 @@ class Pages extends Controller {
     }
     public function login() {
 
-        $this->view('login');
+        $this->view('/login');
     }
 
 }

@@ -1,6 +1,7 @@
 <?php
-session_start();
-
+if(session_id() == ''){
+    session_start();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,9 +15,9 @@ session_start();
 
 <body>
 
-    <p>HELLO <?= $_SESSION=['username'] ?></p>
-    <p></br>Your email is: <?= $_SESSION['email'] ?></p>
-    <p></br> Click here to <a href="http://localhost:8012/api-exercise/users/logout" tite="Logout">Logout.</p>
+    <p>HELLO <?= $_SESSION['user']['username'] ?></p>
+    <p></br>Your email is: <?= $_SESSION['user']['email'] ?></p>
+    <p></br> Click here to <a href="http://localhost:8012/api-exercise/?url=/users/logout" tite="Logout">Logout.</p>
 </body>
 
 </html>

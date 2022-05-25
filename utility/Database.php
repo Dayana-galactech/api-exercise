@@ -24,9 +24,12 @@ class Database {
         }
         return $pdo;
     }
+
             //Allows us to write queries
             public function query($sql) {
-                $this->statement = $this->db->prepare($sql);
+                $database = new Database();
+                $db = $database->getConnection();
+                $this->statement = $db->prepare($sql);
             }
     
             //Bind values

@@ -1,12 +1,12 @@
 function login() {
     var data = new FormData(document.getElementById("login"));
-    fetch('http://localhost:8012/api-exercise/users/login', {
+    fetch('http://localhost:8012/api-exercise/?url=/users/login', {
         method: 'POST',
         body: data,
     })
         .then(res => res.text())
         .then((txt) => {
-           window.location = "../views/";
+           window.location = "http://localhost:8012/api-exercise/?url=/users/index";
         });
         
     return false;

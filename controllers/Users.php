@@ -1,7 +1,7 @@
 <?php
 
-if(session_id() == ''){
-  session_start();
+if (session_id() == '') {
+    session_start();
 }
 class Users extends Controller
 {
@@ -13,14 +13,13 @@ class Users extends Controller
 
     public function register()
     {
-        $csrf = $_SESSION['csrf_token'];
         $data = [
             'username' => '',
             'email' => '',
             'password' => '',
         ];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+            $csrf = $_SESSION['csrf_token'];
             if (!empty($_POST['username']) && !empty($_POST['email'])  && !empty($_POST['password'])) {
                 if (isset($_POST['csrf']) && hash_equals($csrf, $_POST['csrf'])) {
                     $username = htmlspecialchars($_POST['username']);
@@ -39,6 +38,8 @@ class Users extends Controller
 
                     //Register user from model function
                     if ($this->userModel->register($data)) {
+                        var_dump('hello');
+                        header('location: http://localhost:8012/api-exercise/?url=/users/login');
                         echo json_encode(['status' => 'ok']);
                     } else {
                         die('Something went wrong.');
@@ -51,13 +52,13 @@ class Users extends Controller
                 echo "Some fields are empty!";
             }
         } else {
-          $this->view('/register', $data);
+            $this->view('/register', $data);
         }
     }
 
     public function login()
     {
-        $csrf = $_SESSION['csrf_token'];
+        
         $data = [
             'email' => '',
             'password' => '',
@@ -65,8 +66,7 @@ class Users extends Controller
 
         //Check for post
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-
+            $csrf = $_SESSION['csrf_token'];
             if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['csrf'])) {
 
                 if (hash_equals($csrf, $_POST['csrf'])) {
@@ -74,7 +74,7 @@ class Users extends Controller
                     $password = htmlspecialchars($_POST['password']);
 
                     $data = [
-                        'email' =>$email,
+                        'email' => $email,
                         'password' => $password,
                     ];
 
@@ -100,19 +100,23 @@ class Users extends Controller
 
     public function createUserSession($user)
     {
-        $_SESSION['username'] = $user->username;
-        $_SESSION['email'] = $user->email;
-        header('location:' . URLROOT . '/index');
+
+        $_SESSION['user'] = array(
+            "email" => $user->email,
+            "username" => $user->username,
+        );
+        echo json_encode(['status' => 'ok']);
+        header('location: http://localhost:8012/api-exercise/');
     }
 
     public function logout()
     {
-        unset($_SESSION['username']);
-        unset($_SESSION['email']);
+        unset($_SESSION['user']['username']);
+        unset($_SESSION['']['email']);
         if (isset($_COOKIE[session_name()])) :
             setcookie(session_name(), '', time() - 7000000, '/');
         endif;
         session_destroy();
-        header('location:' . URLROOT . '/login');
+        header('location: http://localhost:8012/api-exercise/?url=/users/login');
     }
 }

@@ -14,7 +14,9 @@
     <div class="container pt-5 mt-5">
         <div id="responselogin"></div>
         <?php
-            session_start();
+             if(session_id() == ''){
+                session_start();
+              }
             $secret="secretKey";
             $csrf = hash_hmac('SHA256', uniqid(microtime()), $secret);
             $_SESSION['csrf_token'] = $csrf;
