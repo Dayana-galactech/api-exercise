@@ -40,7 +40,7 @@ class Users extends Controller
                     //Register user from model function
                     if ($this->userModel->register($data)) {
                         //Redirect to the login page
-                        header('location: ' . URLROOT . '/users/login');
+                        header('location: ' . URLROOT . '/login');
                     } else {
                         die('Something went wrong.');
                     }
@@ -52,7 +52,7 @@ class Users extends Controller
                 echo "Some fields are empty!";
             }
         }
-        $this->view('users/register', $data);
+        $this->view('/register', $data);
     }
 
     public function login()
@@ -85,7 +85,7 @@ class Users extends Controller
                     } else {
                         $data['passwordError'] = 'Password or email is incorrect. Please try again.';
 
-                        $this->view('users/login', $data);
+                        $this->view('/login', $data);
                     }
                 }
             }
@@ -95,14 +95,14 @@ class Users extends Controller
                 'password' => '',
             ];
         }
-        $this->view('users/login', $data);
+        $this->view('/login', $data);
     }
 
     public function createUserSession($user)
     {
         $_SESSION['username'] = $user->username;
         $_SESSION['email'] = $user->email;
-        header('location:' . URLROOT . '/pages/index');
+        header('location:' . URLROOT . '/index');
     }
 
     public function logout()
@@ -113,6 +113,6 @@ class Users extends Controller
             setcookie(session_name(), '', time() - 7000000, '/');
         endif;
         session_destroy();
-        header('location:' . URLROOT . '/users/login');
+        header('location:' . URLROOT . '/login');
     }
 }
